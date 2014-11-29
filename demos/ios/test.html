@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>code tip</title>
+    <link rel="stylesheet" href="http://a.tbcdn.cn/apps/e/brix/1.0/brix-min.css">
+    <style>
+        .wrap {
+            width:340px;
+            margin: 50px auto;
+            font-size: 20px;
+        }
+        p{
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <p>左右：<span id="alpha">0</span></p>  
+    <p>前后：<span id="beta">0</span></p>  
+    <p>扭转：<span id="gamma">0</span></p>  
+    <p>指北针指向：<span id="heading">0</span>度</p>  
+    <p>指北针精度：<span id="accuracy">0</span>度</p>  
+
+    <p>
+        apple的文档：DeviceOrientationEvent
+        <a href="https://developer.apple.com/library/safari/documentation/SafariDOMAdditions/Reference/DeviceOrientationEventClassRef/DeviceOrientationEvent/DeviceOrientationEvent.html">DeviceOrientationEvent</a>
+    </p>
+
+    <p>
+        apple的文档：DeviceMotionEvent
+        <a href="https://developer.apple.com/library/safari/documentation/SafariDOMAdditions/Reference/DeviceMotionEventClassRef/DeviceMotionEvent/DeviceMotionEvent.html">DeviceMotionEvent</a>
+    </p>
+
+    <img src="alpha.png" alt="">
+    <p></p>
+    <img src="beta.png" alt="">
+    <p></p>
+    <img src="gamma.png" alt="">
+
+    
+    <p>
+        x 轴方向是从左往右，y 轴方向是从下往上，<br/>
+        z 轴方向是从后往前。当设备静止放在水平桌面时，这三个值都是 0。  
+    </p>
+    <p>
+        z 轴 alpha <br/>
+        当设备顶部指向地球正北方向时，alpha 角是 0 度，设备向左边旋转时增大，介于 0 - 360 度之间。 
+    </p>
+    <p>
+        x 轴，beta 前后翻转 朝着用户或者远离用户 <br/>  
+        设备水平放置时，beta 角度是 0 度；向上翻逐步增加到 180 度；向下翻减少到 -180 度。  
+    </p>
+    <p>
+        y轴 gamma  <br/> 
+        水平放置角度是 0，向右拧增加到 90 度；向左拧减少到 -90 度。 
+    </p>
+</div>
+
+<script type="text/javascript"> 
+    function orientationHandler(event) {
+        document.getElementById("alpha").innerHTML = event.alpha;  
+        document.getElementById("beta").innerHTML = event.beta;  
+        document.getElementById("gamma").innerHTML = event.gamma;  
+        document.getElementById("heading").innerHTML = event.webkitCompassHeading;  
+        document.getElementById("accuracy").innerHTML = event.webkitCompassAccuracy;  
+    }
+      
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", orientationHandler, false);  
+    } 
+</script> 
+
+</body>
+</html>

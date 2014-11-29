@@ -1,0 +1,50 @@
+<html>  
+    <head>  
+       <title>DeviceMotionEvent</title>  
+       <meta charset="UTF-8" />  
+    </head>  
+    <body>
+        <p>
+            devicemotion 事件
+            deviceorientation 的超集，除了方向信息以外，还有加速度信息。
+        </p>
+        <p>
+            acceleration: 一个包含 x，y，z 属性的对象，不考虑重力加速度的情况。
+            accelerationIncludingGravity: 考虑 z 轴自然重力加速的情况下，告诉你每个方向上的加速度。
+        </p>
+        <p>x轴加速度：<span id="x">0</span>米每二次方秒</p>  
+        <p>y轴加速度：<span id="y">0</span>米每二次方秒</p>  
+        <p>z轴加速度：<span id="z">0</span>米每二次方秒</p>  
+        <hr />  
+        <p>x轴加速度(考虑重力加速度)：<span id="xg">0</span>米每二次方秒</p>  
+        <p>y轴加速度(考虑重力加速度)：<span id="yg">0</span>米每二次方秒</p>  
+        <p>z轴加速度(考虑重力加速度)：<span id="zg">0</span>米每二次方秒</p>  
+        <hr />  
+        <p>左右旋转速度：<span id="alpha">0</span>度每秒</p>  
+        <p>前后旋转速度：<span id="beta">0</span>度每秒</p>  
+        <p>扭转速度：<span id="gamma">0</span>度每秒</p>  
+        <hr />  
+        <p>上次收到通知的间隔：<span id="interval">0</span>毫秒</p>  
+        <script type="text/javascript">  
+        function motionHandler(event) {  
+            document.getElementById("interval").innerHTML = event.interval;  
+            var acc = event.acceleration;  
+            document.getElementById("x").innerHTML = acc.x;  
+            document.getElementById("y").innerHTML = acc.y;  
+            document.getElementById("z").innerHTML = acc.z;  
+            var accGravity = event.accelerationIncludingGravity;  
+            document.getElementById("xg").innerHTML = accGravity.x;  
+            document.getElementById("yg").innerHTML = accGravity.y;  
+            document.getElementById("zg").innerHTML = accGravity.z;  
+            var rotationRate = event.rotationRate;  
+            document.getElementById("alpha").innerHTML = rotationRate.alpha;  
+            document.getElementById("beta").innerHTML = rotationRate.beta;  
+            document.getElementById("gamma").innerHTML = rotationRate.gamma;  
+        }  
+          
+        if (window.DeviceMotionEvent) {  
+          window.addEventListener("devicemotion", motionHandler, false);  
+        }
+        </script>  
+    </body>  
+</html>  

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>五子棋</title>
+<style>
+
+*{
+	padding: 0;
+	margin: 0;
+}
+.wrap {
+	width: 1190px;
+	margin: 20px auto;
+}
+.board{
+	border: 1px solid #ddd;
+	overflow: hidden;
+}
+.chess{
+	background: url("http://gtms01.alicdn.com/tps/i1/TB1i1EeGFXXXXcTXpXXCCuUIpXX-71-71.png") no-repeat center;
+}
+
+.black,.black_last{
+	border-radius: 50%;
+	background: #000;
+}
+.white,.white_last{
+	border-radius: 50%;
+	background: #ddd;
+}
+</style>
+</head>
+<body>
+	<div class="wrap">
+		<!--棋盘-->
+		<div class="board"></div>
+		<div class="info">
+			<div id="J_Start">开始</div>
+		</div>
+		<!-- 存放结果 -->
+		<div class="game-result"></div>
+		
+	</div>
+
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

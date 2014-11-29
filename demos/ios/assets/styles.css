@@ -1,0 +1,39 @@
+body {
+    background-image: url('http://gtms01.alicdn.com/tps/i1/T10WxOFetgXXc4mg2e-670-503.jpg'); 
+    background-position: -100px -100px;
+    margin:0px;
+    padding:0px;
+}
+
+.wrap {  
+    position:fixed;
+    top:20px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    overflow:scroll;
+    -webkit-overflow-scrolling:touch;
+    margin-bottom:0px;
+    padding:0px 10px;
+    transform: translate3d( 0px,0px,0px);
+}
+
+
+.wrap .item {
+    width:80px;
+    height:80px;
+    float:left;
+    margin:10px;
+    border-radius: 20px;
+    background: rgba(255,255,255,1);
+}
+.wrap .item img {
+    border-radius: 20px;   
+}
+
+/* 可见宽度与高度的比率 */
+@media screen and (device-aspect-ratio: 9/16) {
+    .wrap {  
+        /*padding:0px 30px;*/
+    }
+}

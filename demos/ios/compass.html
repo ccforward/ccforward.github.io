@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>指北针</title>
+    <link rel="stylesheet" href="http://a.tbcdn.cn/apps/e/brix/1.0/brix-min.css">
+    <style>
+        .wrap {
+            width: 230px;
+            height: 230px;
+            margin: 50px auto;
+            font-size: 20px;
+            position: relative;
+        }
+        p{
+            padding: 15px;
+        }
+        .orientation {
+            position: absolute;
+            color: #000;
+            font-size: 20px;
+
+        }
+        #north {
+            left: 50%;
+        }
+        #sourth {
+            bottom: 0;
+            left: 50%;
+        }
+        #west {
+            top: 50%;
+            left: 0;
+        }
+        #east {
+            top: 50%;
+            right: 0;
+        }
+        .compass{
+            position: absolute;
+            left: 50%;
+            margin-left: -53px;
+            top: 50%;
+            margin-top: -75px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="orientation" id="north">北</div>
+    <div class="orientation" id="sourth">南</div>
+    <div class="orientation" id="west">西</div>
+    <div class="orientation" id="east">东</div>
+    <img class="compass" id="J_Compass" src="http://gtms02.alicdn.com/tps/i2/T1YcXsFvhmXXXB9OUp-106-150.jpg">
+
+    <!-- <p>指北针指向：<span id="heading">0</span>度</p>   -->
+    <!-- <p>指北针精度：<span id="accuracy">0</span>度</p>   -->
+
+</div>
+
+<!-- <script type="text/javascript" src="assets/shake.js"></script> -->
+
+<script type="text/javascript">
+    var compass = document.getElementById("J_Compass"); 
+    function orientationHandler(event) {
+        // document.getElementById("alpha").innerHTML = event.alpha;  
+        // document.getElementById("beta").innerHTML = event.beta;  
+        // document.getElementById("gamma").innerHTML = event.gamma;  
+        // document.getElementById("accuracy").innerHTML = event.webkitCompassAccuracy;  
+        // document.getElementById("heading").innerHTML = event.webkitCompassHeading;  
+
+
+        compass.style.webkitTransform = "rotate(" + event.webkitCompassHeading + "deg)";  
+    }
+      
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", orientationHandler, false);  
+    }
+
+    window.addEventListener('shake', function(){
+        alert('shake');
+    }, false);
+</script> 
+
+</body>
+</html>
