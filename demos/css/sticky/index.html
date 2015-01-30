@@ -158,5 +158,63 @@ img {
             </dl>
         </div>
     </div>
+<script>
+    
+function Page() {
+        this.init();
+
+        this._titlePos = [];
+        this._titleName = [];
+    }
+    Page.prototype.init = function(){
+        var _this = this;
+        setTimeout(function(){
+            var html = TplPage({});
+            $(".page").html(html);
+            _this._bindEvent();
+        },800);
+    }
+    Page.prototype._bindEvent = function() {
+        this._addTitleSticky();
+    }
+    //title sticky效果,不支持sticky的浏览器滚动中模拟
+    Page.prototype._addTitleSticky = function() {
+        var tEl = document.querySelector(".city-title");
+        var posStyle = window.getComputedStyle(tEl)["position"];
+
+        //sticky只有iOS6及以上才支持
+        if (posStyle.indexOf("sticky") == -1) {
+            var _this = this;
+            //获取每个title距离顶部的距离
+            $(".city-title").forEach(function(tEl){
+                _this._titlePos.push($(tEl).offset().top);
+                _this._titleName.push($(tEl).text());
+            });
+
+            var $firstTitle = $($(".city-title")[0]);
+            $firstTitle.addClass("emulateSticky");
+            $(".city-list").addClass("emulateSticky");
+
+            $(window).on("scroll",function(){
+                var yPos = window.pageYOffset;
+                var tIndex = 0;
+
+                if (yPos > _this._titlePos[0]) {
+                    var len = _this._titlePos.length;
+                    for (var i = 0;i < len - 1;i++) {
+                        if (yPos >= _this._titlePos[i] && yPos < _this._titlePos[i+1]) {
+                            tIndex = i;
+                            break;
+                        }
+                    }
+                    if (i == len - 1) {
+                        tIndex == len - 1;
+                    }
+                }
+                $firstTitle.text(_this._titleName[tIndex]);
+            });
+        }
+    }    
+</script>
 </body>
 </html>
