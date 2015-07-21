@@ -1,0 +1,249 @@
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy Birthday</title>
+  <script src="http://codepen.io/assets/libs/prefixfree.min.js"></script>
+  <style>
+    body {
+  background:hsl(70, 31%, 85%);
+  text-align: center;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.container {
+  white-space: nowrap;
+  position:relative;
+}
+
+.balloon {
+  display:inline-block;
+   width:120px;
+  height:145px;
+  background:hsl(215,50%,65%);
+  border-radius:80%;
+  position:relative;
+  box-shadow:inset -10px -10px 0 rgba(0,0,0,0.07);
+  margin:20px 30px;
+  transition:transform 0.5s ease;
+  z-index:10;
+  animation:balloons 4s ease-in-out infinite;
+  transform-origin:bottom center;
+}
+
+@keyframes balloons {
+  0%,100%{ transform:translateY(0) rotate(-4deg); }
+  50%{ transform:translateY(-25px) rotate(4deg); }
+}
+
+.balloon:before {
+  content:"▲";
+  font-size:20px;
+  color:#777;
+  display:block;
+  text-align:center;
+  width:100%;
+  position:absolute;
+  bottom:-12px;
+  z-index:-100;
+}
+.balloon:after {
+ display:inline-block; top:153px;
+  position:absolute;
+  height:9250px;
+  width:1px;
+  margin:0 auto;
+  content:"";
+  background:rgba(0,0,0,0.2); 
+}
+.balloon span {
+  position:absolute;
+  color: white;
+  font-size: 4em;
+}
+
+h1 {
+  position: absolute;
+  width: 100%;
+  top: 250px;
+  text-align: center;
+  color: white;
+  font-size: 4em;
+  z-index: 100;
+}
+  </style>
+</head>
+<body>
+<div class="container">
+</div>
+<script src="assets/zepto.js"></script>
+<script>
+    $(function(){
+  BDay()
+    .party($('.container'))
+
+    .balloon('&#9786;', '#799ed3', '2s')
+    .balloon('生', '#de691a', '2.5s')
+    .balloon('日', '#8882ca', '3s')
+    .balloon('快', '#66cc86', '4s')
+    .balloon('乐', '#cac85e', '3.5s')
+    .balloon('!', '#ce8355', '4s')
+
+    .celebrate('小明!<br />小黑!')
+  ;
+});
+
+var Bounce = (function() {
+  'use strict';
+
+  var speed = 100;
+
+  function Bounce(node)
+  {
+    // enforces new
+    if (!(this instanceof Bounce)) {
+      return new Bounce(node);
+    }
+
+    var object = this;
+    this.step = function() {
+      object.bounce();
+    }
+    this.node = node;
+    this.bounce();
+  }
+
+  Bounce.prototype.bounce = function()
+  {
+    return;
+    // Hate CSS :(
+    var animate = { 
+      top: "+=1"
+    };
+    this.node.animate(animate, speed, 'swing', this.step);
+  };
+
+  return Bounce;
+
+}());
+
+var Balloon = (function() {
+  'use strict';
+
+  function Balloon()
+  {
+    if (!(this instanceof Balloon)) {
+      return new Balloon();
+    }
+
+    this.node = $('<div />')
+      .addClass('balloon')
+      .append(
+        $('<span />')
+      )
+    ;
+    Bounce(this.node);
+  }
+
+  Balloon.prototype.color = function(color)
+  {
+    this.node.css('background-color', color);
+    return this;
+  };
+
+  Balloon.prototype.set = function(type)
+  {
+    this.node.find('span').html(type);
+    return this;
+  };
+
+  Balloon.prototype.center = function()
+  {
+    var text = this.node.find('span');
+    text.css({
+      left: pixelify(this.node, text, 'width'),
+      top: pixelify(this.node, text, 'height')
+    });
+  }
+  
+  Balloon.prototype.on = function(node)
+  {
+    node.append(this.node);
+    this.center();
+    return this;
+  };
+
+  Balloon.prototype.transform = function(speed)
+  {
+    this.node.css('animation-duration', speed);
+    return this;
+  };
+
+  return Balloon;
+
+}());
+
+var BDay = (function() {
+  'use strict';
+
+  var instance;
+  
+  function BDay()
+  {
+    if (instance) {
+      return instance;
+    }
+    if (!(this instanceof BDay)) {
+      return new BDay();
+    }
+    instance = this;
+  }
+
+  BDay.prototype.party = function(node)
+  {
+    instance.node = node
+      .css('visible', 'hidden')
+      .html('')
+    ;
+    return instance;
+  };
+  
+  BDay.prototype.balloon = function(char, color, speed)
+  {
+    Balloon()
+      .set(char)
+      .color(color)
+      .transform(speed)
+      .on(instance.node)
+     ;
+    return instance;
+  };
+
+  BDay.prototype.celebrate = function(who)
+  {
+    var $window = $(window);
+    instance.node
+      .append(
+        $('<h1 />').html(who)
+      )
+      .css({
+        left: pixelify($window, instance.node, 'width'),
+        top: pixelify($window, instance.node, 'height')
+      })
+      .show()
+    ;
+    return instance;
+  };
+
+  return BDay;
+
+}());
+
+function pixelify(container, node, type)
+{
+  var size = container[type]() - node[type]();
+  return (size / 2) + 'px';
+}
+</script>
+</body>
+</html>
