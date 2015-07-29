@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebRTC Test</title>
+    <meta http-equiv="Content-Type" content="text/html,charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <style>
+    html,
+    body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    #canvas {
+        float: right;
+        top: 0;
+        left: 50%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    #capture {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        margin-left: -25px;
+        z-index: 100;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    
+    #img-list {
+        width: 100%;
+        background: #ccc;
+    }
+    
+    #img-list h3 {
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+    }
+    
+    #img-list img {
+        width: 25%;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="camera">
+        <canvas id="canvas" width="400px" height="400px"></canvas>
+        <video id="video"></video>
+    </div>
+    <button id="capture">拍照</button>
+    <label for="capture-times">连拍次数</label>
+    <input id="capture-times" type="number" placeholder="连拍次数" value=10>
+    <label for="capture-duration">连拍时间间隔</label>
+    <input type="number" id="capture-duration" placeholder="连拍时间间隔" value=0.2>
+    <label for="btn-radio">是否开启连拍模式</label>
+    <input type="checkbox" id="btn-radio">
+    <button class="filter" data-filter="grayscale">灰度效果</button>
+    <button class="filter" data-filter="sepia">复古效果</button>
+    <button class="filter" data-filter="red">红色蒙版效果</button>
+    <button class="filter" data-filter="invert">反转效果</button>
+    <button id="clearPic">清除图片列表</button>
+    <div id="img-list"></div>
+
+<script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
+<script>
+// 设置连拍时，是否启用滤镜
+var filterOpt = null;
+
+var Camera = function (opt) {
+    for (var i in opt) {
+        if (opt.hasOwnProperty(i)) {
+            this[i] = opt[i];
+        }
+    }
+    // 获取相关元素
+    this.canvas =  document.getElementById(this.canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.video = document.getElementById(this.videoId);
+    this.btn = document.getElementById(this.btnId);
+    this.imageList = document.getElementById(this.imageList);
+    this.times = document.getElementById(this.times);
+    this.duration = document.getElementById(this.duration);
+    this.clearBtn = document.getElementById(this.clearBtn);
+
+    this.init();
+
+    return this;
+};
+
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.moZGetUserMedia;
+
+Camera.prototype = {
+    init : function () {
+        var self = this;
+
+        self.initVideo();
+        self.initBtn();
+    },
+
+    initVideo : function () {
+        var video = this.video,
+            canvas = this.canvas,
+            self = this;
+        video.addEventListener('loadeddata', function () {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+        });
+
+        // 获取视屏流
+        navigator.getUserMedia({
+            video: true,
+            // audio : true
+        }, function (stream) {
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+        }, function (error) {
+            console.log(error);
+        })
+    },
+
+    initCanvas : function () {
+
+    },
+
+    initBtn : function () {
+        var self = this;
+        var btn = self.btn,
+            canvas = self.canvas,
+            ctx = self.ctx,
+            video = self.video,
+            // imageData = null,
+            originImageData = null;
+            times = self.times.value,
+            duration = self.duration.value * 1000;
+
+
+        btn.addEventListener('click', function () {
+            /*var times = self.times.value - 1,
+                duration = self.duration.value * 1000;*/
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            
+            var radio = $('#'+self.radio+':checked')[0];
+            filterOpt = false;
+
+
+            // console.dir(radio);
+
+            if (radio) {
+                self.continueCapute(times, duration);
+            } else {
+                self.createImage();
+            }
+            
+        });
+
+        // 使用滤镜
+        $('.filter').on('click', function () {
+            var el = $(this);
+            var opt = el.data('filter'),
+                times = self.times.value,
+                duration = self.duration.value * 1000,
+                imageData,
+                radio = $('#'+self.radio+':checked')[0];
+
+            // 获取原本的备份
+            // imageData = originImageData;
+            imageData = self.getImageData();
+
+            filter[opt](imageData);
+            filterOpt = opt;
+
+            // 将像素点绘制到canvas上
+            ctx.putImageData(imageData, 0, 0);
+
+            if (radio) {
+                self.continueCapute(times, duration);
+            } else {
+                self.createImage();
+            }
+        });
+
+        // 清除图片列表
+        $(self.clearBtn).on('click', function () {
+            $(self.imageList).html('');
+        })
+
+    },
+    // 连拍
+    continueCapute : function (times, duration) {
+        var self = this,
+            ctx = this.ctx,
+            video = this.video,
+            canvas = this.canvas;
+
+        var imageData;
+
+        console.log(times, duration);
+        if (times) {
+            times--;
+            setTimeout(function () {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                if (filterOpt) {
+                    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    filter[filterOpt](imageData);
+                    // 将像素点绘制到canvas上
+                    ctx.putImageData(imageData, 0, 0);
+                }
+
+                self.createImage();
+
+                self.continueCapute(times, duration);
+            })
+        }
+    },
+    createImage : function () {
+        var self = this;
+        var imgList = self.imageList;
+
+        var img = new Image();
+        img.src = self.canvas.toDataURL('image/png');
+
+        imgList.appendChild(img);
+    },
+
+    getImageData : function () {
+        var ctx = this.ctx;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        // 获取每个像素点的信息
+        return ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
+};
+
+var filter = {
+
+    // 灰度效果
+    grayscale : function (pixels) {
+        var d = pixels.data;
+
+        for (var i = 0, len = d.length; i < len; i += 4) {
+            var r = d[i],
+                g = d[i + 1],
+                b = d[i + 2];
+            d[i] = d[i + 1] = d[i + 2] = (r + g + b) / 3;
+        }
+
+        return pixels;
+    },
+
+    // 复古效果
+    sepia : function (pixels) {
+        var d = pixels.data;
+
+        for (var i = 0, len = d.length; i < len; i += 4) {
+            var r = d[i],
+                g = d[i + 1],
+                b = d[i + 2];
+
+            d[i]     = (r * 0.393) + (g * 0.769) + (b * 0.189);
+            d[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168);
+            d[i + 2] = (r * 0.272) + (g * 0.534) + (b * 0.131);
+        }
+
+        return pixels;
+    },
+
+    // 红色蒙版效果
+    red : function (pixels) {
+        var d = pixels.data;
+
+        for (var i = 0, len = d.length; i < len; i += 4) {
+            var r = d[i],
+                g = d[i + 1],
+                b = d[i + 2];
+
+            d[i] = (r + g + b) / 3;
+            d[i + 1] = d[i + 2] = 0;
+        }
+
+        return pixels;
+    },
+
+    // 反转效果
+    invert : function (pixels) {
+        var d = pixels.data;
+
+        for (var i = 0, len = d.length; i < len; i += 4) {
+            var r = d[i],
+                g = d[i + 1],
+                b = d[i + 2];
+
+            d[i]     = 255 - r;
+            d[i + 1] = 255 - g;
+            d[i + 2] = 255 - b;
+        }
+
+        return pixels;
+    }
+};
+var camera = new Camera({
+    canvasId : 'canvas',
+    videoId : 'video',
+    btnId : 'capture',
+    imageList : 'img-list',
+    times : 'capture-times',
+    radio : 'btn-radio',
+    duration : 'capture-duration',
+    clearBtn : 'clearPic'
+});
+</script>
+</body>
+
+</html>
