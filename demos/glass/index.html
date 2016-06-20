@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<title>App</title>
+<title>毛玻璃</title>
 <meta charset="utf-8">
 
 
 <style>
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding-top: calc(50vh - 6em);
+}
 body, 
 main::before {
-    background: url(//gw.alicdn.com/tps/i1/TB1Zc6qHpXXXXb3XFXXeowVVXXX-1200-800.jpg) 0 / cover fixed
+    background: url(//gw.alicdn.com/tps/i1/TB1Zc6qHpXXXXb3XFXXeowVVXXX-1200-800.jpg) 0 / cover fixed;
 }
 main {
     position: relative;
-    width: 500px;
+    margin: 0 auto;
+    max-width: 500px;
     padding: 100px;
-    margin: 200px auto 0;
-    background: hsla(0, 0%, 100%, .2);
+    background: hsla(0, 0%, 100%, .2) border-box;
     overflow: hidden;
+    border-radius: .3em;
 }
 blockquote {
     line-height: 2;
@@ -53,8 +59,4 @@ main::before {
 
 
 </body>
-
-<script>
-
-</script>
 </html>
