@@ -6,14 +6,43 @@
 
 
 <style>
+div {
+	position: relative;
+	width: 100px;
+	height: 50px;
+	margin: 20px auto;
+	padding: .5em 1em .35em;
+	text-align: center;
+	color: #fff;
+}
+div:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: -1;
+	background: #f60;
+	transform: perspective(.5em)  rotateX(5deg);
+}
 
+
+.trap1 {
+
+}
 
 </style>
 </head>
 
 <body>
 
+<div class="trap1">
+	梯形
+</div>
 
+
+<img src="https://attachments.tower.im/tower/d5f88be27d1c4a1eac0f7b2281e885f9/" alt="">
 
 </body>
 </html>
