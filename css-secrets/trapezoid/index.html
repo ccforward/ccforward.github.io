@@ -7,29 +7,50 @@
 
 <style>
 div {
-	position: relative;
-	width: 100px;
-	height: 50px;
-	margin: 20px auto;
-	padding: .5em 1em .35em;
-	text-align: center;
-	color: #fff;
+    position: relative;
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
+    margin: 50px auto;
+    padding: .5em 1em .35em;
+    text-align: center;
+    color: #333;
 }
 div:before {
-	content: '';
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	z-index: -1;
-	background: #f60;
-	transform: perspective(.5em)  rotateX(5deg);
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background: #f60;
+    transition: all .5s;
+    
 }
 
 
-.trap1 {
+.trap1:before {
+    transform: perspective(.5em)  rotateX(5deg);
+}
 
+.trap2:before {
+    transform: perspective(.5em)  rotateX(5deg);
+    transform-origin: bottom;
+}
+
+.trap3:before {
+    transform: perspective(.5em)  rotateX(5deg) scaleY(1.3);
+    transform-origin: bottom;
+}
+
+.trap4:before {
+    transform: perspective(.5em)  rotateX(5deg) scaleY(1.3);
+    transform-origin: bottom left;
+}
+.trap5:before {
+    transform: perspective(.5em)  rotateX(5deg) scaleY(1.3);
+    transform-origin: bottom right;
 }
 
 </style>
@@ -38,11 +59,26 @@ div:before {
 <body>
 
 <div class="trap1">
-	梯形
+    梯形1
+</div>
+
+<div class="trap2">
+    梯形2
+</div>
+
+<div class="trap3">
+    梯形3
+</div>
+
+<div class="trap4">
+    梯形4
+</div>
+
+<div class="trap5">
+    梯形5
 </div>
 
 
-<img src="https://attachments.tower.im/tower/d5f88be27d1c4a1eac0f7b2281e885f9/" alt="">
 
 </body>
 </html>
