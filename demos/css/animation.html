@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<title>CSS 动画</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="format-detection" content="telephone=no"/>
+    
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing:border-box;
+}
+
+div {
+    margin: 100px auto;
+    width: 100px;
+    height: 100px;
+    background: #f60;
+}
+
+.height {
+    -webkit-transition: height 1s linear;
+    transition: height 1s linear;
+}
+.height:hover {
+    height: 200px;
+}
+
+.transform {
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+    -webkit-transition: transform 1s linear;
+    transition: transform 1s linear;
+}
+
+.transform:hover {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+}
+
+</style>
+</head>
+<body>
+<div class="height"></div>
+
+<div class="transform"></div>
+<script>
+
+</script>
+</body>
+</html>
