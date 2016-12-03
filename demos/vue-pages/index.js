@@ -16,10 +16,12 @@ new Vue({
   },
   methods: {
     fn1(d, e){
+      console.log('demo1: ' + d)
       this.current1 = d
     },
     fn2(d, e){
       e.preventDefault()
+      console.log('demo2: ' + d)
       this.current2 = d
     }
   },
