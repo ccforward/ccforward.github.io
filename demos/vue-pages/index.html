@@ -4,13 +4,21 @@
   <meta charset="UTF-8">
   <title>vue-pages demo</title>
   <style>
-      #app {
-        width: 800px;
-        margin: 100px auto;
-      }
+    body {
+      text-align: center;
+    }
+    .link {
+      font-size: 22px;
+    }
+    #app {
+      width: 800px;
+      margin: 100px auto;
+    }
   </style>
 </head>
 <body>
+  <h1>A Dead Simple Vue Pagination Component Using Bootstrap Style</h1>
+  <a taret="_blank" class="link" href="https://github.com/ccforward/cc/tree/master/vue-pages">GitHub Repo Link</a>
   <div id="app">
       <vue-pages :url="url1" :total="total" :counts="counts" :current="current1" :fn="fn1"></vue-pages>
       
