@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Gomoku</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <style>
+    #app {
+      width: 620px;
+      margin: 10px auto;
+      font-size: 28px;
+      font-size: 0;
+    }
+    h1 {
+      font-size: 20px;
+      text-align: center;
+    }
+    .chess {
+      margin-bottom: 30px
+    }
+    
+    i {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    i.w {
+      background-color: #f00;
+    }
+    i.w::before {
+      border-color: #f00;
+    }
+    i.w::after {
+      border-color: #f00;
+    }
+    
+    i.b {
+      background-color: #000;
+    }
+    i.b::before {
+      border-color: #000;
+    }
+    i.b::after {
+      border-color: #000;
+    }
+    /* - 横线 */
+    i::before {
+      content: ' ';
+      position: absolute;
+      top: 20px;
+      width: 40px;
+      height: 0;
+      border-top: 1px solid #333;
+    }
+    /* | 竖线 */
+    i::after {
+      content: ' ';
+      position: absolute;
+      right: 20px;
+      width: 0;
+      height: 40px;
+      border-right: 1px solid #333;
+    }
+    button {
+      margin-right: 5px
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <h1>Vue 五子棋</h1>
+    <div class="chess">
+      <template v-for="(p,x) in pieces.len">
+        <template v-for="(p,y) in pieces.len">
+          <i :class="pieces[_cover(x)+_cover(y)]" @click="tick(x,y)"></i>
+          <br v-if="y == pieces.len-1">
+        </template>
+      </template> 
+    </div>
+    <button @click="init">重新开局</button>
+    <button @click="undo">悔棋</button>
+  </div>
+
+<script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
+<script>
+  new Vue({
+      el: '#app',
+      name: 'chess',
+      data: {
+        roundOver: false,
+        boardWidth: 15, // 正方形棋盘长宽
+        last: '', // 上一步的坐标
+        pieces:{},
+        pieceClass:{ b: 'b', w: 'w' },
+        player: 0, // 1:player1 class==b  0:player2 class==w
+      },
+      created(){
+        this.init()
+      },
+      methods: {
+        // 初始化棋盘 和 坐标数据
+        init(){
+          this.roundOver = false
+          this.player = 0
+          const center = parseInt(this.boardWidth/2)
+          let pieces = {
+            len: this.boardWidth  // 长 == 宽 == this.boardWidth
+          }
+          // 初始化所有坐标 
+          for(let x=0,l=pieces.len; x<l; x++){
+            for(let y=0,ll=pieces.len; y<ll; y++){
+              let player = '';
+              // 设定中间棋子为黑棋
+              if(x == center && y == center) player = this.pieceClass.b
+              pieces[this._cover(x) + this._cover(y)] = player
+            }
+          }
+          this.pieces = pieces
+        },
+        _cover(m){ return m < 10 ? '0'+m : ''+m },
+        tick(x, y){
+          const coordinate = this._cover(x) + this._cover(y);
+          if(!this.pieces[coordinate] && !this.roundOver){
+            this.pieces[coordinate] = this.player ? 'b' : 'w';
+            this.last = coordinate
+            this.check(x, y)
+            this.player = !this.player
+          }
+        },
+        undo(){
+          if(this.last){
+            this.pieces[this.last] = ''
+            this.player = !this.player
+          }
+        },
+        // 判断输赢
+        check(x, y){
+          // 横向
+          const cx = this._cover(x)
+          const cy = this._cover(y)
+          const current = this.pieces[cx+cy]
+          let count = 0
+          for(let i=0,l=this.boardWidth; i<l; i++){
+            if(current == this.pieces[cx+this._cover(i)])
+              count++
+            else
+              count = 0
+
+            if(count == 5){
+              alert('win')
+              this.roundOver = true
+              return true
+            }
+          }
+
+          // 纵向
+          count = 0
+          for(let i=0,l=this.boardWidth; i<l; i++){
+            if(current == this.pieces[this._cover(i) + cy])
+              count++
+            else
+              count = 0
+
+            if(count == 5){
+
+              alert('win')
+              this.roundOver = true
+              return true
+            }
+          }
+
+          // \ 方向
+          count = 0
+          let sub = Math.min(x, y)
+          let abs = Math.abs(x - y)
+          sub = sub > 5 ? 5 : sub
+
+          let _x = x - sub
+          let _y = y - sub
+
+          for (let i=0, l=this.boardWidth - abs; i<l; i++) {
+              if (current == this.pieces[this._cover(_x)+this._cover(_y)])
+                count++
+              else
+                count = 0
+
+              _y++
+              _x++
+              if (count == 5){
+                alert('win')
+                this.roundOver = true
+                return true;
+              }
+          }
+
+          // \ 方向
+          count = 0
+          _x = this.boardWidth - x - 1
+          _y = y
+          sub = Math.min(_x, _y)
+          abs = this.boardWidth - Math.abs(_x - _y)
+
+          sub = sub > 5 ? 5 : sub
+          _y = _y - sub
+          _x = _x - sub
+
+          for (let i = 0; i < abs; i++) {
+            if (current == this.pieces[this._cover(_y) + this._cover(this.boardWidth - _x - 1)])
+              count++
+            else
+              count = 0
+
+            _y++
+            _x++
+
+            if (count == 5){
+              alert('win')
+              this.roundOver = true
+              return true;
+            }
+          }
+        }
+      }
+  })
+</script>
+</body>
+
+</html>
