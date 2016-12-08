@@ -88,15 +88,18 @@
   </div>
 
 <script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
+<script src="//cdn.bootcss.com/socket.io/1.7.1/socket.io.js"></script>
 <script>
-  new Vue({
+const socket = io.connect('http://127.0.0.1:8888');
+
+const vm = new Vue({
       el: '#app',
       name: 'chess',
       data: {
         roundOver: false,
         boardWidth: 15, // 正方形棋盘长宽
         last: '', // 上一步的坐标
-        pieces:{},
+        pieces: {},
         pieceClass:{ b: 'b', w: 'w' },
         player: 0, // 1:player1 class==b  0:player2 class==w
       },
@@ -122,6 +125,7 @@
             }
           }
           this.pieces = pieces
+          socket.emit('tick', JSON.stringify(this.pieces));
         },
         _cover(m){ return m < 10 ? '0'+m : ''+m },
         tick(x, y){
@@ -130,12 +134,14 @@
             this.pieces[coordinate] = this.player ? 'b' : 'w';
             this.last = coordinate
             this.check(x, y)
+            socket.emit('tick', JSON.stringify(this.pieces));
             this.player = !this.player
           }
         },
         undo(){
-          if(this.last){
+          if(!roundOver && this.last){
             this.pieces[this.last] = ''
+            socket.emit('tick', JSON.stringify(this.pieces));
             this.player = !this.player
           }
         },
@@ -228,6 +234,15 @@
         }
       }
   })
+
+  socket.on('tick-back', data => {
+    vm.pieces = JSON.parse(data)
+  })
+  // window.onerror = function(msg, url, line) { 
+  //   console.log(msg)
+  //   console.log(url)
+  //   console.log(line)
+  // };
 </script>
 </body>
 
