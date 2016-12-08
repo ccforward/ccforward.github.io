@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "vue": "^2.1.4",
-    "vue-pages": "1.0.1"
+    "vue-pages": "1.1.0"
   },
   "scripts": {
     "build": "webpack",
