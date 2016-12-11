@@ -1,7 +1,6 @@
 (function($) {
-  if (!document.defaultView || !document.defaultView.getComputedStyle) {
     var oldCurCSS = jQuery.curCSS;
-    jQuery.curCSS = function(elem, name, force) {
+    $.curCSS = function(elem, name, force) {
       if (name === 'background-position') {
         name = 'backgroundPosition';
       }
@@ -14,7 +13,6 @@
       }
       return oldCurCSS(elem, 'backgroundPositionX', force) + ' ' + oldCurCSS(elem, 'backgroundPositionY', force);
     };
-  }
 
   var oldAnim = $.fn.animate;
   $.fn.animate = function(prop) {

@@ -2,81 +2,8 @@
 <html>
 <head>
   <meta charset = "utf-8">
-  
-  <style type="text/css">
-    #div{width:500px; height:40px; line-height:40px; margin:200px auto 20px auto; font-size:20px}
-    #div #day{ display:inline-block; line-height:13px; margin:2px 4px 0 4px;}
-    #div #hour{ display:inline-block; line-height:13px; margin:2px 4px 0 4px;}
-    #div #minute{ display:inline-block; line-height:13px; margin:2px 4px 0 4px;}
-    #div #second{ display:inline-block; line-height:13px; margin:2px 4px 0 4px;}
-    #div #day i{width:15px;height:23px; display:inline-block; background: url(//gtms02.alicdn.com/tps/i2/TB11UjQHXXXXXbBapXXAaDqIFXX-23-462.png) no-repeat; background-position:0 0; text-indent:-999em}
-    #div #hour i{width:15px;height:23px; display:inline-block; background: url(//gtms02.alicdn.com/tps/i2/TB11UjQHXXXXXbBapXXAaDqIFXX-23-462.png) no-repeat; background-position:0 0; text-indent:-999em}
-    #div #minute i{width:15px;height:23px; display:inline-block; background: url(//gtms02.alicdn.com/tps/i2/TB11UjQHXXXXXbBapXXAaDqIFXX-23-462.png) no-repeat; background-position:0 0; text-indent:-999em}
-    #div #second i{width:15px;height:23px; display:inline-block; background: url(//gtms02.alicdn.com/tps/i2/TB11UjQHXXXXXbBapXXAaDqIFXX-23-462.png) no-repeat; background-position:0 0; text-indent:-999em}
-  </style>
+  <meta http-equiv="refresh" content="0;url=https://www.ccforward.net" />
 </head>
 <body>
-<div id = "div"> 
-  <span id = "day"></span>Days
-  <span id = "hour"></span>Hours
-  <span id = "minute"></span>Minutes
-  <span id = "second"></span>Seconds
-</div>
-<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
-  <script type="text/javascript" src = "./javascripts/main.js"></script>
-  <script type="text/javascript">
-    $(function(){
-      getDate();
-      setInterval('getDate()', 1000);//每隔1秒执行一次
-    });
-
-      var days,minutes,secondes
-      function getDate(){
-        var birthday = new Date("1988/09/14 06:38:00");
-        var date = new Date();
-        var date3 = date.getTime() - birthday.getTime();
-        // console.log(date3);
-        //计算出相差天数
-        days=Math.floor(date3/(24*3600*1000));
-        //计算出小时数
-        var leave1=date3%(24*3600*1000);    //计算天数后剩余的毫秒数
-        var hours=Math.floor(leave1/(3600*1000));
-        //计算相差分钟数
-        var leave2=leave1%(3600*1000);        //计算小时数后剩余的毫秒数
-        minutes=Math.floor(leave2/(60*1000));
-        //计算相差秒数
-        var leave3=leave2%(60*1000);      //计算分钟数后剩余的毫秒数
-        seconds=Math.round(leave3/1000);
-        // document.write(days+"天"+hours+"时"+minutes+"分"+seconds+"秒  ")
-        hours = fix(hours,2);
-        minutes = fix(minutes,2);
-        seconds = fix(seconds,2);
-        show_num("#day",days);
-        show_num("#hour",hours);
-        show_num("#minute",minutes);
-        show_num("#second",seconds);
-      }
-
-      function fix(num, length) {
-        return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
-      }
-
-      function show_num(elem,n){
-        var it = $(elem+" i"); 
-        var len = String(n).length; 
-        for(var i=0;i<len;i++){ 
-          if(it.length<=i){ 
-            $(elem).append("<i></i>"); 
-        } 
-          var num=String(n).charAt(i); 
-          var y = -parseInt(num)*30; //y轴位置 
-          var obj = $(elem+" i").eq(i); 
-          obj.animate({ //滚动动画 
-            backgroundPosition :'(0 '+String(y)+'px)'  
-              }, 'slow','swing',function(){} 
-          ); 
-        }
-      }
-  </script>
 </body>
 </html>

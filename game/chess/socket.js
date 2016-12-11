@@ -1,49 +1,35 @@
 'use strict'
 
-const fs = require('fs')
-const http = require('http')
-const io = require('socket.io').listen('8888')
-const net = require('net')
-const HTTP_PORT  = 8888
+const PORT = 8888
+const io = require('socket.io').listen(PORT)
 
-// const httpServer = http.createServer( (req, res) => {
-//     res.writeHead(200, { 'Content-type': 'text/html' });
-//     res.end('');
-// });
-// httpServer.listen(HTTP_PORT, () => {
-//     console.log('Server listening at http://localhost:' + HTTP_PORT);
-// });
-
-
-const players = new Set()
-const client = {
-    p1: '',
-    p2: ''
-}
+const clients = []
+const players = {} // sid和socket对象映射关系 id:socket
+const relations = {} // 每个玩家和对手的对应关系  id1:id2   id2:id1
 
 io.sockets.on('connection', socket => {
-    if(client.p1 && client.p2){
-        client.p1 = client.p2 = ''
-    }
-    if(client.p1){
-        console.log('p2 add')
-        client.p2 = socket
-    }else {
-        console.log('p1 add')
-        client.p1 = socket
-    }
-    players.add(socket.id)
+    const sid = socket.id
+    clients.push(sid)
 
-    socket.on('tick', data => {
-        client.p1.emit('tick-back', data)
-        client.p2.emit('tick-back', data)
+    players[sid] = socket
+
+    socket.emit('host', sid)
+
+    socket.on('link', d => {
+        const link = JSON.parse(d)
+        relations[link.target] = link.sid // 主动连接的主机
+        relations[link.sid] = link.target // target 被连接主机
+        players[socket.id].emit('linkOK', 'linkOK')
+        players[link.target].emit('linked', 'linked')
+    })
+
+    socket.on('tick', d => {
+        const data = JSON.parse(d)
+        // 查询对手socket 并返回信息
+        players[relations[socket.id]].emit('tick-back', d)
     });
 
-    socket.on('message', data => {
-        console.log('监听message：' + data);
-    });
     socket.on('disconnect', ()=>{
-        console.log('delete'+ socket.id)
-        players.delete(socket.id)
+        // TODO 断开连接
     })
 });

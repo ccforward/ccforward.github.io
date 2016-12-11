@@ -67,12 +67,18 @@
     button {
       margin-right: 5px
     }
+    input {
+      width: 200px;
+      height: 25px;
+      text-indent: 10px;
+    }
   </style>
 </head>
 
 <body>
   <div id="app" v-cloak>
     <h1>Vue 五子棋</h1>
+    
     <div class="chess">
       <template v-for="(p,y) in pieces.len">
         <template v-for="(p,x) in pieces.len">
@@ -82,11 +88,18 @@
       </template> 
     </div>
     <button @click="init">重新开局</button>
-    <button @click="undo">悔棋</button>
+    <!-- <button @click="undo">悔棋</button> -->
+    <br><br>
+    <p>本机号：{{socket.id}} (复制给其他人来连接本机)</p>
+    <input type="text" v-model="otherSid" placeholder="输入其他主机号进行连接">
+    <button @click="link">联机</button>
   </div>
 
 <script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
+<script src="//cdn.bootcss.com/socket.io/1.7.1/socket.io.js"></script>
 <script>
+  Vue.config.devtools = true
+
   new Vue({
       el: '#app',
       name: 'chess',
@@ -96,16 +109,43 @@
         last: '', // 上一步的坐标
         pieces: {},
         pieceClass:{ b: 'b', w: 'w' },
-        player: 0, // 1:player1 class==b  0:player2 class==w
+        player: 1, // 1:player1 class==b 黑棋子  0:player2 class==w 白棋子
+        socket: {},
+        canPlay: false,
+        otherSid: '', // 其他主机 sid
       },
       created(){
         this.init()
+
+        const socket = io.connect('http://127.0.0.1:8888')
+        socket.on('connect', () => {
+          this.socket = socket
+        })
+
+        socket.on('linked', () => {
+            alert('有主机连接成功，等待对方下棋')
+        })
+        socket.on('linkOK', () => {
+            alert('连接主机成功，开始下棋')
+            // 连接其他主机 成为白棋子 可以落子
+            this.player = 0
+            this.canPlay = true
+        })
+
+        // 对手落子后数据返回
+        socket.on('tick-back', d => {
+          const data = JSON.parse(d)
+          this.pieces = data.pieces;
+          this.canPlay = true
+          if(data.gameOver){
+            alert('game over')
+          }
+        })
       },
       methods: {
         // 初始化棋盘 和 坐标数据
         init(){
           this.gameOver = false
-          this.player = 0
           const center = parseInt(this.boardWidth/2)
           let pieces = {
             len: this.boardWidth  // 长 == 宽 == this.boardWidth
@@ -123,21 +163,28 @@
         },
         
         tick(x, y){
-          const coordinate = this._cover(x) + this._cover(y);
-          if(!this.pieces[coordinate] && !this.gameOver){
-            this.pieces[coordinate] = this.player ? this.pieceClass.b : this.pieceClass.w;
-            this.last = coordinate
-            if(!this.check(x, y)){
-              this.player = !this.player
+          if(this.canPlay){
+            const coordinate = this._cover(x) + this._cover(y);
+            if(!this.pieces[coordinate] && !this.gameOver){
+              this.pieces[coordinate] = this.player ? this.pieceClass.b : this.pieceClass.w;
+              this.last = coordinate
+              this.check(x, y)
+              const result = {
+                pieces: this.pieces,
+                gameOver: this.gameOver
+              }
+              this.socket.emit('tick', JSON.stringify(result))
+              // 转换角色
+              this.canPlay = false
             }
           }
         },
-        undo(){
-          if(!this.gameOver && this.last){
-            this.pieces[this.last] = ''
-            this.player = !this.player
-          }
-        },
+        // undo(){
+        //   if(!this.gameOver && this.last){
+        //     this.pieces[this.last] = ''
+        //     this.player = !this.player
+        //   }
+        // },
         // 判断输赢
         check(x, y){
           // 横向
@@ -152,7 +199,7 @@
               count = 0
 
             if(count == 5){
-              alert('win')
+              alert('you win')
               this.gameOver = true
               return true
             }
@@ -167,7 +214,7 @@
               count = 0
 
             if(count == 5){
-              alert('win')
+              alert('you win')
               this.gameOver = true
               return true
             }
@@ -195,7 +242,7 @@
               _y++
               _x++
               if (count == 5){
-                alert('win')
+                alert('you win')
                 this.gameOver = true
                 return true;
               }
@@ -203,8 +250,8 @@
 
           // / 方向  想象成 \方向 的镜像
           count = 0
-          _x = this.boardWidth - x - 1 
-          _y = y 
+          _x = this.boardWidth - x - 1
+          _y = y
           sub = Math.min(_x, _y)
 
           sub = sub > 5 ? 5 : sub
@@ -228,7 +275,7 @@
             _x++
 
             if (count == 5){
-              alert('win')
+              alert('you win')
               this.gameOver = true
               return true;
             }
@@ -236,6 +283,17 @@
 
 
           return false
+        },
+
+        // 联机
+        link(){
+          if(this.otherSid){
+            const o = {
+              target: this.otherSid,
+              sid: this.socket.id
+            }
+            this.socket.emit('link', JSON.stringify(o))
+          }
         },
 
         _cover(m){ return m < 10 ? `0${m}` : ''+m}
