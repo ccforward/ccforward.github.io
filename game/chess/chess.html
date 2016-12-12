@@ -87,6 +87,7 @@
 
 <script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
 <script>
+  Vue.config.devtools = true
   new Vue({
       el: '#app',
       name: 'chess',
@@ -197,7 +198,7 @@
               if (count == 5){
                 alert('win')
                 this.gameOver = true
-                return true;
+                return true
               }
           }
 
@@ -230,10 +231,9 @@
             if (count == 5){
               alert('win')
               this.gameOver = true
-              return true;
+              return true
             }
           }
-
 
           return false
         },
