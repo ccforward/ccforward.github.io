@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>嘿嘿嘿</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+    #app {
+      text-align: center;
+    }
+    textarea {
+      width: 300px;
+      height: 200px;
+    }
+    button {
+      margin-right: 5px
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" v-cloak>
+    <textarea v-model="imgs" name="" id="" cols="30" rows="10"></textarea>
+    <button @click="look">看图</button>
+    <div class="img-list">
+      <img v-for="item in imgList" :src="'http://wcfcdn-us.cmcm.com/'+item">
+    </div>
+  </div>
+
+<script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      imgs: '',
+      imgList:[]
+    },
+    methods: {
+      look(){
+        this.imgList = this.imgs.split('\n')
+      }
+    }
+  })
+</script>
+</body>
+
+</html>
