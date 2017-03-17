@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+  <meta name="format-detection" content="email=no" />
+  <meta name="format-detection" content="address=no" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Audio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    #app {
+      width: 500px;
+      margin: 100px auto;
+    }
+    input {
+      width: 300px;
+      padding: 10px 0;
+    }
+    button {
+      display: inline-block;
+      width: 70px;
+      padding: 10px 0;
+      margin: 0 auto;
+      text-align: center;
+      border-radius 4px
+      color: #fff;
+      text-decoration: none;
+      outline: 0 none;
+      background: #77d154;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    
+    <audio :src="audio" id="audio" ref="au"></audio>
+    <input type="text" @focus="select" id="ipt" v-model="audio" placeholder="audio 地址">
+    <br>
+    <br>
+    <button @click="play">播放</button>
+
+  </div>
+  <script src="http://cdn.bootcss.com/vue/2.2.2/vue.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        audio: 'http://wcfcdn-us.cmcm.com/crowds-750532542683676672-17-English_QA_3'
+      },
+      methods: {
+        select(){
+          document.querySelector('#ipt').select()
+        },
+        play(){
+          document.querySelector('#audio').play()
+        }
+      }
+
+    })
+  </script>
+</body>
+</html>
