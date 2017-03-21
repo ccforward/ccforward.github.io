@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+  <meta name="format-detection" content="email=no" />
+  <meta name="format-detection" content="address=no" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>image tag</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html,body {
+      overflow-x: scroll;
+    }
+    #app {
+      margin: 100px auto;
+
+    }
+    .image-wrap {
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+    }
+    img {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+    }
+    .tag {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: transparent;
+      border: 1px solid #f00;
+    }
+    .tag i {
+        position: absolute;
+        top: -15px;
+        right: -9px;
+        width: 12px;
+        height: 12px;
+        line-height: 12px;
+        color: #fff;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #fff;
+        border-radius: 50%;
+        z-index: 1000;
+    }
+    .tag i:after {
+      content: 'X';
+      font-style: normal;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  
+  <div id="image" class="image-wrap">
+    <img src="i.png">
+  </div>
+
+</div>
+<script>
+
+window.onload = function(){
+  const $ = document.querySelector.bind(document)
+  const Util = {
+    on(el, ev, fn) {
+      el.addEventListener(ev, fn)
+    },
+    off(el, ev, fn) {
+      el.removeEventListener(ev, fn)
+    },
+  }
+
+  const rect = $('#image').getBoundingClientRect()
+
+  const img = {
+    w: $('#image').offsetWidth,
+    h: $('#image').offsetHeight,
+    x: rect.left,
+    y: rect.top
+  }
+
+  const start = {
+    x: 0,
+    y: 0
+  }
+  const move = {
+    x: 0,
+    y: 0
+  }
+  let newTag
+
+  Util.on($('#image'), 'touchstart', function(e) {
+
+    if(e.target.nodeName.toLowerCase() === 'i'){
+      const tag = e.target.parentNode
+      tag.parentNode.removeChild(tag)
+    }else {
+      start.x = e.targetTouches[0].pageX
+      start.y = e.targetTouches[0].pageY
+
+      newTag = document.createElement('div')
+      const close = document.createElement('i')
+      newTag.append(close)
+      newTag.className = 'tag'
+      newTag.style.top = (start.y - img.y) + 'px'
+      newTag.style.left = (start.x - img.x) + 'px'
+
+      $('#image').append(newTag)
+    }
+  })
+
+
+  Util.on($('#image'), 'touchmove', function(e) {
+    move.x = e.targetTouches[0].pageX
+    move.y = e.targetTouches[0].pageY
+
+    // width
+    let width = move.x-start.x
+    let height = move.y-start.y
+
+    
+
+    if(width<=0){
+      width = 0
+    }
+    if(height<=0){
+      height = 0
+    }
+
+    if(width > img.w){
+      width = img.w
+    }
+    if(height > img.h){
+      height = img.h
+    }
+    
+
+    if(width > 0 && height > 0) {
+      newTag.style.width = width + 'px'
+      newTag.style.height = height + 'px'
+    }
+
+  })
+  Util.on($('#image'), 'touchend', function(e) {
+
+    // 超出图片区域
+    if(move.x > (img.x + img.w)){
+      newTag.style.width = img.x + img.w - start.x + 'px'
+    }
+    if(move.y > (img.y + img.h)){
+      newTag.style.height = img.h + img.y - start.y + 'px'
+    }
+    newTag = null
+  })
+  
+}
+  
+</script>
+</body>
+</html>
