@@ -45,7 +45,16 @@
     <input type="text" @focus="select" id="ipt" v-model="audio" placeholder="audio 地址">
     <br>
     <br>
-    <button @click="play">播放</button>
+    播放速度
+    <select v-model="speed">
+      <option value="0.5">0.5</option>
+      <option value="0.8">0.8</option>
+      <option value="1.0">1.0</option>
+      <option value="1.5">1.5</option>
+      <option value="2.0">2.0</option>
+    </select> 
+    <button @click="playSpeed">变速播放</button><br>
+    <button @click="play">正常播放</button>
 
   </div>
   <script src="https://cdn.bootcss.com/vue/2.2.2/vue.js"></script>
@@ -53,14 +62,22 @@
     new Vue({
       el: '#app',
       data: {
-        audio: 'http://wcfcdn-us.cmcm.com/crowds-750532542683676672-17-English_QA_3'
+        speed: '1.0',
+        audio: 'http://wcfcdn-us.cmcm.com/crowds-784215961636306944-17-English_QA_419'
       },
       methods: {
         select(){
           document.querySelector('#ipt').select()
         },
         play(){
-          document.querySelector('#audio').play()
+          var audio = document.querySelector('#audio')
+          audio.playbackRate = '1.0'
+          audio.play()
+        },
+        playSpeed(){
+          var audio = document.querySelector('#audio')
+          audio.playbackRate = this.speed
+          audio.play()
         }
       }
 

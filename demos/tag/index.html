@@ -94,102 +94,95 @@
 </p>
 <script>
 
-window.onload = function(){
-  const $ = document.querySelector.bind(document)
-  const Util = {
-    on(el, ev, fn) {
-      el.addEventListener(ev, fn)
+window.onload = function () {
+  var $ = document.querySelector.bind(document);
+  var Util = {
+    on: function on(el, ev, fn) {
+      el.addEventListener(ev, fn);
     },
-    off(el, ev, fn) {
-      el.removeEventListener(ev, fn)
-    },
-  }
+    off: function off(el, ev, fn) {
+      el.removeEventListener(ev, fn);
+    }
+  };
 
-  const rect = $('#image').getBoundingClientRect()
+  var rect = $('#image').getBoundingClientRect();
 
-  const img = {
+  var img = {
     w: $('#image').offsetWidth,
     h: $('#image').offsetHeight,
     x: rect.left,
     y: rect.top
-  }
+  };
 
-  const start = {
+  var start = {
     x: 0,
     y: 0
-  }
-  const move = {
+  };
+  var move = {
     x: 0,
     y: 0
-  }
-  let newTag
+  };
+  var newTag = void 0;
 
-  Util.on($('#image'), 'touchstart', function(e) {
+  Util.on($('#image'), 'touchstart', function (e) {
 
-    if(e.target.nodeName.toLowerCase() === 'i'){
-      const tag = e.target.parentNode
-      tag.parentNode.removeChild(tag)
-    }else {
-      start.x = e.targetTouches[0].pageX
-      start.y = e.targetTouches[0].pageY
+    if (e.target.nodeName.toLowerCase() === 'i') {
+      var tag = e.target.parentNode;
+      tag.parentNode.removeChild(tag);
+    } else {
+      start.x = e.targetTouches[0].pageX;
+      start.y = e.targetTouches[0].pageY;
 
-      newTag = document.createElement('div')
-      const close = document.createElement('i')
-      newTag.append(close)
-      newTag.className = 'tag'
-      newTag.style.top = (start.y - img.y) + 'px'
-      newTag.style.left = (start.x - img.x) + 'px'
+      newTag = document.createElement('div');
+      var close = document.createElement('i');
+      newTag.append(close);
+      newTag.className = 'tag';
+      newTag.style.top = start.y - img.y + 'px';
+      newTag.style.left = start.x - img.x + 'px';
 
-      $('#image').append(newTag)
+      $('#image').append(newTag);
     }
-  })
+  });
 
-
-  Util.on($('#image'), 'touchmove', function(e) {
-    move.x = e.targetTouches[0].pageX
-    move.y = e.targetTouches[0].pageY
+  Util.on($('#image'), 'touchmove', function (e) {
+    move.x = e.targetTouches[0].pageX;
+    move.y = e.targetTouches[0].pageY;
 
     // width
-    let width = move.x-start.x
-    let height = move.y-start.y
+    var width = move.x - start.x;
+    var height = move.y - start.y;
 
-    
-
-    if(width<=0){
-      width = 0
+    if (width <= 0) {
+      width = 0;
     }
-    if(height<=0){
-      height = 0
+    if (height <= 0) {
+      height = 0;
     }
 
-    if(width > img.w){
-      width = img.w
+    if (width > img.w) {
+      width = img.w;
     }
-    if(height > img.h){
-      height = img.h
-    }
-    
-
-    if(width > 0 && height > 0) {
-      newTag.style.width = width + 'px'
-      newTag.style.height = height + 'px'
+    if (height > img.h) {
+      height = img.h;
     }
 
-  })
-  Util.on($('#image'), 'touchend', function(e) {
+    if (width > 0 && height > 0) {
+      newTag.style.width = width + 'px';
+      newTag.style.height = height + 'px';
+    }
+  });
+  Util.on($('#image'), 'touchend', function (e) {
 
     // 超出图片区域
-    if(move.x > (img.x + img.w)){
-      newTag.style.width = img.x + img.w - start.x + 'px'
+    if (move.x > img.x + img.w) {
+      newTag.style.width = img.x + img.w - start.x + 'px';
     }
-    if(move.y > (img.y + img.h)){
-      newTag.style.height = img.h + img.y - start.y + 'px'
+    if (move.y > img.y + img.h) {
+      newTag.style.height = img.h + img.y - start.y + 'px';
     }
-    newTag = null
-  })
-  
-}
-  
+    newTag = null;
+  });
+};
 </script>
 </body>
 </html>
