@@ -2,21 +2,67 @@
 <html>
 
 <head>
-  <title>upload</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>upload</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+<style>
+  .img-wrap {
+    width: 100%;
+  }
+  img {
+    width: 100%;
+  }
+</style>
 </head>
 
 <body>
   <div id="app" v-cloak>
-    <input type="file">
+    <input type="file" ref="upload" @change="selectFile($event)">
+    <p>图片</p>
+    <div class="img-wrap">
+      <img v-if="url" :src="url">
+      <hr>
+      <img v-if="newUrl" :src="newUrl">
+    </div>
   </div>
+  <script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
+  <script>
+  new Vue({
+    el: '#app',
+    data: {
+      url: '',
+      newUrl: ''
+    },
+    methods: {
+      selectFile(e) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.url = e.target.result;
+          this.$refs.upload.value = "";
+          const img = new Image();
+          img.src = this.url;
+          img.onload = () => {
+            this.newUrl = this.compress(img)
+          }
+        }
+        reader.readAsDataURL(this.$refs.upload.files[0]);
+      },
+      compress(img) {
+        const canvas = document.createElement('canvas'),
+        ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-<script src="//cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
-<script>
-  // new Vue({
-  //   el: '#app'
-  // })
-</script>
+        console.log(canvas);
+
+        const data = canvas.toDataURL('image/jpeg', 0.5);
+        console.log(data);
+        return data;
+      }
+    }
+  })
+  </script>
 </body>
 
 </html>
