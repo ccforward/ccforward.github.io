@@ -19,6 +19,7 @@
   <div id="app" v-cloak>
     <input type="file" ref="upload" @change="selectFile($event)">
     <p>图片</p>
+    <input type="text" v-model="ratio">
     <div class="img-wrap">
       <img v-if="url" :src="url">
       <hr>
@@ -31,7 +32,8 @@
     el: '#app',
     data: {
       url: '',
-      newUrl: ''
+      newUrl: '',
+      ratio: 0.5
     },
     methods: {
       selectFile(e) {
@@ -56,7 +58,7 @@
 
         console.log(canvas);
 
-        const data = canvas.toDataURL('image/jpeg', 0.5);
+        const data = canvas.toDataURL('image/jpeg', parseFloat(this.ratio));
         console.log(data);
         return data;
       }
