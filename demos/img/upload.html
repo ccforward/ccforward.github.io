@@ -18,7 +18,7 @@
 <body>
   <div id="app" v-cloak>
     <input type="file" ref="upload" @change="selectFile($event)">
-    <p>图片</p>
+    <p>图片 <button v-if="canCompress" @click="compress(img)">压缩</button></p>
     <input type="text" v-model="ratio">
     <div class="img-wrap">
       <img v-if="url" :src="url">
@@ -33,7 +33,9 @@
     data: {
       url: '',
       newUrl: '',
-      ratio: 0.5
+      ratio: 0.5,
+      canCompress: false,
+      img: null
     },
     methods: {
       selectFile(e) {
@@ -41,26 +43,24 @@
         reader.onload = (e) => {
           this.url = e.target.result;
           this.$refs.upload.value = "";
-          const img = new Image();
-          img.src = this.url;
-          img.onload = () => {
-            this.newUrl = this.compress(img)
+          this.img = new Image();
+          this.img.src = this.url;
+          this.img.onload = () => {
+            this.canCompress = true;
           }
         }
         reader.readAsDataURL(this.$refs.upload.files[0]);
       },
       compress(img) {
+        this.newUrl = ''
         const canvas = document.createElement('canvas'),
         ctx = canvas.getContext('2d');
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        console.log(canvas);
-
-        const data = canvas.toDataURL('image/jpeg', parseFloat(this.ratio));
-        console.log(data);
-        return data;
+        this.newUrl = canvas.toDataURL('image/jpeg', parseFloat(this.ratio));
+        console.log(this.newUrl.length)
       }
     }
   })
