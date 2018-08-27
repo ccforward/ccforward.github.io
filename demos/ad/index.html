@@ -21,63 +21,98 @@
     }
     .container .contact {
       position: absolute;
-      width: 100%;
-      bottom: 3.4%;
+      height: 53vw;
+      bottom: 0.5%;
+      transform: translateX(-50%);
+      left: 50%;
+      _background: url(https://img.alicdn.com/tfs/TB1pOXktDqWBKNjSZFxXXcpLpXa-583-392.png) no-repeat;
     }
     .container .contact input {
       display: block;
-      height: 5vw;
-      width: 40vw;
-      margin-left: 38vw;
+      height: 12vw;
+      width: 70vw;
       font-size: 1.2rem;
+      border: 0;
+      border-radius: 30px;
+      padding: 3vw;
+      box-sizing: border-box;
+    }
+    .container .contact input.name {
+      margin-bottom: 4vw;
     }
     .container .contact.phone {
       bottom: 1.9%;
     }
+    .container .contact .tips {
+      position: absolute;
+      width: 30vw;
+      left: -16%;
+      bottom: 10%;
+      z-index: -1;
+    }
     .submit {
       position: absolute;
-      bottom: 6px;
-      left: 50%;
+      bottom: 15%;
+      left: 70%;
       transform: translateX(-50%);
-      width: 25vw;
-      height: 5vw;
+      width: 35vw;
+      height: 15vw;
       line-height: 5vw;
       border: 0;
-      border-radius: 2px;
-      color: #fff;
-      background: #e85757;
       font-size: 12px;
+      background: url(https://img.alicdn.com/tfs/TB12.8ztBjTBKNjSZFuXXb0HFXa-228-65.png) no-repeat center center;
+      background-size: 100%;
+    }
+    .layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      background: #0006;
+      width: 100%;
+      height: 100%;
+    }
+    .layer img {
+      position: fixed;
+      right: 0;
+      top: 20px;
+      width: 65vw;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="app">
-    <img src="https://wx4.sinaimg.cn/mw690/6b2d7bc3gy1fuo4a3ur9wj20ku1730yj.jpg">
-    <img src="https://wx3.sinaimg.cn/mw690/6b2d7bc3gy1fuo4a6o26qj20ku0wcjw1.jpg">
-    <img src="https://wx1.sinaimg.cn/mw690/6b2d7bc3gy1fuo4a8k1w2j20ku0w7wk1.jpg">
-    <img src="https://wx2.sinaimg.cn/mw690/6b2d7bc3gy1fuo4aasfafj20ku0w6wlx.jpg">
-    <img src="https://wx1.sinaimg.cn/mw690/6b2d7bc3gy1fuo4amknqfj20ku0wftdk.jpg">
-    <img src="https://wx1.sinaimg.cn/mw690/6b2d7bc3gy1fuo4adf4i0j20ku0w9445.jpg">
-    <div class="contact name">
-      <input type="text" v-model="name">
+  <div id="app">
+    <div class="container">
+      <img src="https://wx3.sinaimg.cn/mw690/6b2d7bc3gy1fuobbj4e0aj20ku112wjg.jpg">
+      <img src="https://wx2.sinaimg.cn/mw690/6b2d7bc3gy1fuobbl9kz1j20ku0w9jvc.jpg">
+      <img src="https://wx3.sinaimg.cn/mw690/6b2d7bc3gy1fuobboacofj20ku0w5wjk.jpg">
+      <img src="https://wx4.sinaimg.cn/mw690/6b2d7bc3gy1fuobbqxbyuj20ku0wbgpt.jpg">
+      <img src="https://wx4.sinaimg.cn/mw690/6b2d7bc3gy1fuobbtftlhj20ku0w2ah6.jpg">
+      <img src="https://wx4.sinaimg.cn/mw690/6b2d7bc3gy1fuobceb91nj20ku0z5wik.jpg">
+      <div class="contact">
+        <img src="https://img.alicdn.com/tfs/TB1Jbt3trsrBKNjSZFpXXcXhFXa-243-158.png" class="tips">
+        <input class="name" placeholder="姓名" type="text" v-model="name">
+        <input type="number" placeholder="电话" v-model="phone">
+        <button class="submit" @click="submit"></button>
+      </div>
     </div>
-    <div class="contact phone">
-      <input type="number" v-model="phone">
+    <div class="layer" v-show="showLayer">
+      <img src="https://img.alicdn.com/tfs/TB11IRbtvImBKNjSZFlXXc43FXa-381-217.png">
     </div>
-    <button class="submit" @click="submit">
-      提交信息
-    </button>
   </div>
   <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
   <script>
     new Vue({
       el: '#app',
       data: {
+        showLayer: false,
         name: '',
         phone: ''
       },
       methods: {
         submit: function() {
+          this.showLayer = true;
+          // ajax 调用 异步 接口存储 姓名和电话
           alert(this.name + '--' + this.phone);
         }
       }
