@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>卫岗燕麦黄桃酸奶</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      position: relative;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 0;
+    }
+    .container img {
+      width: 100%;
+    }
+    .container .contact {
+      position: absolute;
+      width: 100%;
+      bottom: 3.4%;
+    }
+    .container .contact input {
+      display: block;
+      height: 5vw;
+      width: 40vw;
+      margin-left: 38vw;
+      font-size: 1.2rem;
+    }
+    .container .contact.phone {
+      bottom: 1.9%;
+    }
+    .submit {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 25vw;
+      height: 5vw;
+      line-height: 5vw;
+      border: 0;
+      border-radius: 2px;
+      color: #fff;
+      background: #e85757;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <img src="https://wx4.sinaimg.cn/mw690/6b2d7bc3gy1fuo4a3ur9wj20ku1730yj.jpg">
+    <img src="https://wx3.sinaimg.cn/mw690/6b2d7bc3gy1fuo4a6o26qj20ku0wcjw1.jpg">
+    <img src="https://wx1.sinaimg.cn/mw690/6b2d7bc3gy1fuo4a8k1w2j20ku0w7wk1.jpg">
+    <img src="https://wx2.sinaimg.cn/mw690/6b2d7bc3gy1fuo4aasfafj20ku0w6wlx.jpg">
+    <img src="https://wx1.sinaimg.cn/mw690/6b2d7bc3gy1fuo4amknqfj20ku0wftdk.jpg">
+    <img src="https://wx1.sinaimg.cn/mw690/6b2d7bc3gy1fuo4adf4i0j20ku0w9445.jpg">
+    <div class="contact name">
+      <input type="text" v-model="name">
+    </div>
+    <div class="contact phone">
+      <input type="number" v-model="phone">
+    </div>
+    <button class="submit" @click="submit">
+      提交信息
+    </button>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        name: '',
+        phone: ''
+      },
+      methods: {
+        submit: function() {
+          alert(this.name + '--' + this.phone);
+        }
+      }
+    })
+  </script>
+</body>
+</html>
