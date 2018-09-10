@@ -1,0 +1,63 @@
+<!doctype html>
+<!-- This is just a very slightly modified tracking.js demo: https://trackingjs.com/examples/face_camera.html -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tracking.js/1.1.3/tracking-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tracking.js/1.1.3/data/face-min.js"></script>
+  <style>
+  video, canvas {
+    margin-left: 100px;
+    margin-top: 120px;
+    position: absolute;
+  }
+  </style>
+</head>
+<body>
+  <div class="demo-frame">
+    <div class="demo-container">
+      <p style="text-align: center;font-size: 25px;margin: 0;">复制<br><code>sort([6,8,2,5,1,9,3,7,4])</code><br>控制台执行</p>
+      <video id="video" width="320" height="240" preload autoplay loop muted></video>
+      <canvas id="canvas" width="320" height="240"></canvas>
+    </div>
+  </div>
+  <p style="text-align: center;font-size: 12px;margin: 0;">source code <a target="_blank" href="https://gist.github.com/lynn/ffe1f2ae55732ba4cebec010758ebf51">https://gist.github.com/lynn/ffe1f2ae55732ba4cebec010758ebf51</a></p>
+
+  <script>
+    looking = false;
+    function sort(arr) {
+      //           Keep or flip to taste ↴
+      return arr.concat().sort((a, b) => !looking ? a - b : 0.5 - Math.random());
+      // Hey! Since people are going to look at this, I should mention:
+      // sorting by 0.5 - Math.random() is a *lousy* way to shuffle an array,
+      // in the sense that the distribution of outcomes is very uneven. For my
+      // purpose, it doesn't matter (I'm intentionally trying to botch the
+      // outcome anyway), but you shouldn't ever seriously use this trick.
+    }
+    window.onload = function() {
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+      var tracker = new tracking.ObjectTracker('face');
+      tracker.setInitialScale(4);
+      tracker.setStepSize(2);
+      tracker.setEdgesDensity(0.1);
+      tracking.track('#video', tracker, { camera: true });
+      tracker.on('track', function(event) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        looking = false;
+        event.data.forEach(function(rect) {
+          looking = true;
+          context.strokeStyle = '#a64ceb';
+          context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+          context.font = '11px Helvetica';
+          context.fillStyle = "#fff";
+          context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+          context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+        });
+      });
+    };
+  </script>
+
+</body>
+</html>
