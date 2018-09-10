@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Test</title>
+</head>
+
+<body>
+  <script src="//g.alicdn.com/dingding/dingtalk-jsapi/2.0.8/dingtalk.open.js"></script>
+  <script>
+  dd.ready(function() {
+    dd.runtime.permission.requestAuthCode({
+      corpId: "corpid",
+      onSuccess: function(result) {
+        alert(JSON.stringify(result));
+      },
+      onFail: function(err) {
+        alert(err);
+      }
+    });
+  });
+  </script>
+</body>
+
+</html>
