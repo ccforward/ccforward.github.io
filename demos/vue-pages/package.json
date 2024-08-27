@@ -11,7 +11,7 @@
     "vue-html-loader": "1.2.3",
     "vue-loader": "^9.9.0",
     "vue-style-loader": "^1.0.0",
-    "webpack": "2.1.0-beta.20"
+    "webpack": "5.94.0"
   },
   "dependencies": {
     "vue": "^2.1.4",
